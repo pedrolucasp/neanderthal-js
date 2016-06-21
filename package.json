@@ -1,0 +1,24 @@
+{
+  "name": "neanderthal-js",
+  "version": "0.1",
+  "description": "work in progress",
+  "main": "neanderthal.js",
+  "scripts": {
+    "test": "mocha && jshint *.js"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Pedro Lucas Porcellis",
+    "email": "pedrolucasporcellis@gmail.com",
+    "url": "http://www.porcellis.com"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*",
+    "jshint": "*"
+  },
+  "jshintConfig": {
+    "node": "true",
+    "mocha": "true"
+  }
+}

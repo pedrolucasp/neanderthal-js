@@ -1,6 +1,6 @@
 {
   "name": "neanderthal-js",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "work in progress",
   "main": "neanderthal.js",
   "scripts": {
@@ -11,6 +11,10 @@
     "name": "Pedro Lucas Porcellis",
     "email": "pedrolucasporcellis@gmail.com",
     "url": "http://www.porcellis.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pedrolucasp/neanderthal-js"
   },
   "devDependencies": {
     "chai": "*",

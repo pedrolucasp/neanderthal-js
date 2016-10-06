@@ -63,12 +63,14 @@
         return o.integerCode;
       }), code) >= 0) {
         this.programSteps.push(code);
-        return this.programSteps.push(memoryPosition);
+        this.programSteps.push(memoryPosition);
+        return this.isUsingMnemonics = false;
       } else if (typeof code === String && indexOf.call(this.mnemonicsCodes.map(function(o) {
         return o.value;
       }), code) >= 0) {
         this.programSteps.push(code);
-        return this.programSteps.push(memoryPosition);
+        this.programSteps.push(memoryPosition);
+        return this.isUsingMnemonics = true;
       }
     };
 
@@ -108,9 +110,7 @@
     };
 
     Neanderthal.prototype.executeStep = function(stepObject) {
-      var typeOfStep;
-      typeOfStep = typeOfStep(stepObject);
-      if (typeOfStep === "instruction") {
+      if (typeOfStep(stepObject) === "instruction") {
 
         /*
          * find out what instruction is
@@ -127,16 +127,31 @@
     };
 
     Neanderthal.prototype.typeOfStep = function(stepObject) {
-      if (typeof stepObject === Number) {
-        if (indexOf.call(this.mnemonicsCodes.map(function(o) {
-          return o.integerCode;
-        }), stepObject) >= 0) {
+      if (this.isUsingMnemonics) {
+        if (isMnemonic(stepObject)) {
           return "instruction";
+        } else {
+          return "data";
         }
-        return "data";
       } else {
-        return "instruction";
+        if (isMnemonicIntegerCode(stepObject)) {
+          return "instruction";
+        } else {
+          return "data";
+        }
       }
+    };
+
+    Neanderthal.prototype.isMnemonicIntegerCode = function(code) {
+      return (indexOf.call(this.mnemonicsCodes.map(function(o) {
+        return o.integerCode;
+      }), code) >= 0);
+    };
+
+    Neanderthal.prototype.isMnemonic = function(code) {
+      return (indexOf.call(this.mnemonicsCodes.map(function(o) {
+        return o.value;
+      }), code) >= 0);
     };
 
     Neanderthal.prototype.execute = function() {

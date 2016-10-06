@@ -74,9 +74,11 @@ class @Neanderthal
     if typeof code is Number and code in (@mnemonicsCodes.map (o) -> return o.integerCode)
       @programSteps.push(code)
       @programSteps.push(memoryPosition)
+      @isUsingMnemonics = false
     else if typeof code is String and code in (@mnemonicsCodes.map (o) -> return o.value)
       @programSteps.push(code)
       @programSteps.push(memoryPosition)
+      @isUsingMnemonics = true
 
   addData: (memoryPosition, value) ->
     data = { memory: memoryPosition, value: value }
@@ -100,8 +102,7 @@ class @Neanderthal
     return this.getData(memoryPosition).value
 
   executeStep: (stepObject) ->
-    typeOfStep = typeOfStep(stepObject)
-    if typeOfStep is "instruction"
+    if typeOfStep(stepObject) is "instruction"
       ###
       # find out what instruction is
       # execute the instruction code
@@ -114,12 +115,16 @@ class @Neanderthal
       ###
 
   typeOfStep: (stepObject) ->
-    if typeof stepObject is Number
-      return "instruction" if stepObject in (@mnemonicsCodes.map (o) -> return o.integerCode)
-      "data"
+    if @isUsingMnemonics
+      if isMnemonic(stepObject) then "instruction" else "data"
     else
-      "instruction"
+      if isMnemonicIntegerCode(stepObject) then "instruction" else "data"
 
+  isMnemonicIntegerCode: (code) ->
+    return (code in @mnemonicsCodes.map (o) -> return o.integerCode)
+
+  isMnemonic: (code) ->
+    return (code in @mnemonicsCodes.map (o) -> return o.value)
 
   # Alias of #run()
   execute: ->

@@ -13,7 +13,7 @@ class @Neanderthal
   #
   # programMemory : Array {
   #   { memoryPosition: "128", value: "10" }
-  # }
+  # } 
   ###
 
   constructor: ->
@@ -25,47 +25,82 @@ class @Neanderthal
   @mnemonicsCodes = [
     {
       integerCode: 0,
-      value: "NOP"
+      code: "NOP",
+      needsParams: false,
+      value: ->
     },
     {
       integerCode: 16,
-      value: "STA"
+      code: "STA",
+      needsParams: true,
+      value: (position) ->
+        addData(position, @accumulator)
     },
     {
       integerCode: 32,
-      value: "LDA"
+      code: "LDA",
+      needsParams: true,
+      value: (position) ->
+        @accumulator = getDataValue(position)
+        return
     },
     {
       integerCode: 48,
-      value: "ADD"
+      code: "ADD",
+      needsParams: true,
+      value: (position) ->
+        @accumulator += getDataValue(position)
+        return
     },
     {
       integerCode: 64,
-      value: "OR"
+      code: "OR",
+      needsParams: true,
+      value: (position) ->
+        @accumulator || getDataValue(position)
     },
     {
       integerCode: 80,
-      value: "AND"
+      code: "AND",
+      needsParams: true,
+      value: (position) ->
+        @accumulator && getDataValue(position)
     },
     {
       integerCode: 96,
-      value: "NOT"
+      code: "NOT",
+      needsParams: false,
+      value: ->
+        @accumulator = !@accumulator
+        return
     },
     {
       integerCode: 128,
-      value: "JMP"
+      code: "JMP",
+      needsParams: true,
+      value: (position) ->
+        execute(position);
     },
     {
       integerCode: 144,
-      value: "JN"
+      code: "JN",
+      needsParams: true,
+      value: (position) ->
+        execute(position) if @accumulator < 0
     },
     {
       integerCode: 160,
-      value: "JZ"
+      code: "JZ",
+      needsParams: true,
+      value: (position) ->
+        execute(position) if @accumulator == 0
     },
     {
       integerCode: 244,
-      value: "HLT"
+      code: "HLT",
+      needsParams: false,
+      value: ->
+        exit();
     }
   ]
 
@@ -75,10 +110,12 @@ class @Neanderthal
       @programSteps.push(code)
       @programSteps.push(memoryPosition)
       @isUsingMnemonics = false
+      return
     else if typeof code is String and code in (@mnemonicsCodes.map (o) -> return o.value)
       @programSteps.push(code)
       @programSteps.push(memoryPosition)
       @isUsingMnemonics = true
+      return
 
   addData: (memoryPosition, value) ->
     data = { memory: memoryPosition, value: value }
@@ -124,13 +161,16 @@ class @Neanderthal
     return (code in @mnemonicsCodes.map (o) -> return o.integerCode)
 
   isMnemonic: (code) ->
-    return (code in @mnemonicsCodes.map (o) -> return o.value)
+    return (code in @mnemonicsCodes.map (o) -> return o.code)
 
   # Alias of #run()
   execute: ->
     run()
 
   run: ->
+    # Implement
+
+  exit: ->
     # Implement
 
   getProgramCounter: ->

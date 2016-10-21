@@ -24,37 +24,83 @@
     Neanderthal.mnemonicsCodes = [
       {
         integerCode: 0,
-        value: "NOP"
+        code: "NOP",
+        needsParams: false,
+        value: function() {}
       }, {
         integerCode: 16,
-        value: "STA"
+        code: "STA",
+        needsParams: true,
+        value: function(position) {
+          return addData(position, this.accumulator);
+        }
       }, {
         integerCode: 32,
-        value: "LDA"
+        code: "LDA",
+        needsParams: true,
+        value: function(position) {
+          this.accumulator = getDataValue(position);
+        }
       }, {
         integerCode: 48,
-        value: "ADD"
+        code: "ADD",
+        needsParams: true,
+        value: function(position) {
+          this.accumulator += getDataValue(position);
+        }
       }, {
         integerCode: 64,
-        value: "OR"
+        code: "OR",
+        needsParams: true,
+        value: function(position) {
+          return this.accumulator || getDataValue(position);
+        }
       }, {
         integerCode: 80,
-        value: "AND"
+        code: "AND",
+        needsParams: true,
+        value: function(position) {
+          return this.accumulator && getDataValue(position);
+        }
       }, {
         integerCode: 96,
-        value: "NOT"
+        code: "NOT",
+        needsParams: false,
+        value: function() {
+          this.accumulator = !this.accumulator;
+        }
       }, {
         integerCode: 128,
-        value: "JMP"
+        code: "JMP",
+        needsParams: true,
+        value: function(position) {
+          return execute(position);
+        }
       }, {
         integerCode: 144,
-        value: "JN"
+        code: "JN",
+        needsParams: true,
+        value: function(position) {
+          if (this.accumulator < 0) {
+            return execute(position);
+          }
+        }
       }, {
         integerCode: 160,
-        value: "JZ"
+        code: "JZ",
+        needsParams: true,
+        value: function(position) {
+          if (this.accumulator === 0) {
+            return execute(position);
+          }
+        }
       }, {
         integerCode: 244,
-        value: "HLT"
+        code: "HLT",
+        needsParams: false,
+        value: function() {
+          return exit();
+        }
       }
     ];
 
@@ -64,13 +110,13 @@
       }), code) >= 0) {
         this.programSteps.push(code);
         this.programSteps.push(memoryPosition);
-        return this.isUsingMnemonics = false;
+        this.isUsingMnemonics = false;
       } else if (typeof code === String && indexOf.call(this.mnemonicsCodes.map(function(o) {
         return o.value;
       }), code) >= 0) {
         this.programSteps.push(code);
         this.programSteps.push(memoryPosition);
-        return this.isUsingMnemonics = true;
+        this.isUsingMnemonics = true;
       }
     };
 
@@ -150,7 +196,7 @@
 
     Neanderthal.prototype.isMnemonic = function(code) {
       return (indexOf.call(this.mnemonicsCodes.map(function(o) {
-        return o.value;
+        return o.code;
       }), code) >= 0);
     };
 
@@ -159,6 +205,8 @@
     };
 
     Neanderthal.prototype.run = function() {};
+
+    Neanderthal.prototype.exit = function() {};
 
     Neanderthal.prototype.getProgramCounter = function() {
       return this.programCounter;

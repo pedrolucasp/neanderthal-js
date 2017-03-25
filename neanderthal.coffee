@@ -6,9 +6,12 @@
 
 class @Neanderthal
 
+  # TODO: refactor the structure of execution of steps
+  # and general organization of program memory
+
   ###
   # programSteps : Array {
-  #   ["LDA", "128", "ADD", "10", "STA", 130, "HLT"]
+  #   [ "LDA", "128", "ADD", "10", "STA", 130, "HLT" ]
   # }
   #
   # programMemory : Array {
@@ -148,7 +151,7 @@ class @Neanderthal
       ###
       # load the data referent to this memoryPosition
       # if programSteps(stepIndex - 1) is an instruction
-      # that requires a parameter, pass to the function
+      # that require a parameter, pass it to the function
       ###
 
   typeOfStep: (stepObject) ->

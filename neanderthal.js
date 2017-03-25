@@ -7,7 +7,7 @@
 
     /*
      * programSteps : Array {
-     *   ["LDA", "128", "ADD", "10", "STA", 130, "HLT"]
+     *   [ "LDA", "128", "ADD", "10", "STA", 130, "HLT" ]
      * }
      *
      * programMemory : Array {
@@ -167,7 +167,7 @@
         /*
          * load the data referent to this memoryPosition
          * if programSteps(stepIndex - 1) is an instruction
-         * that requires a parameter, pass to the function
+         * that require a parameter, pass it to the function
          */
       }
     };
